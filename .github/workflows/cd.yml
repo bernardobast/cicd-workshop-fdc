@@ -13,21 +13,21 @@ jobs:
           # Authenticates in GCP with the provided user credentials.
           # Provides secure, temporary credentials for GCP.
           # Supports authentication using Service Account Key JSONs (less secure, legacy method).
-          - name: Authenticate with GCP 
-            uses: google-github-actions/auth@v1
-            with:
-              credentials_json: ${{ secrets.GCP_SA_KEY }}
+          # - name: Authenticate with GCP 
+          #   uses: google-github-actions/auth@v1
+          #   with:
+          #     credentials_json: ${{ secrets.GCP_SA_KEY }}
 
           # Set the default GCP project for subsequent gcloud commands in your environment. 
-          - name: Configure GCP Project
-            run: gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
+          # - name: Configure GCP Project
+          #   run: gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
 
           # Configure Docker authentication for interacting with Artifact Registry, allowing you to push or pull Docker images securely.
           # Build the docker image and push top artifact registry.
-          - name: Build and Push Docker Image 🐳
-            run: |
-              gcloud auth configure-docker --quiet
-              gcloud auth configure-docker europe-west3-docker.pkg.dev --quiet
+          # - name: Build and Push Docker Image 🐳
+          #   run: |
+          #     gcloud auth configure-docker --quiet
+          #     gcloud auth configure-docker europe-west3-docker.pkg.dev --quiet
           
           - name: This will be your CD ⚙️
             run: echo "This will be your CD ⚙️"
