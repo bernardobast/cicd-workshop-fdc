@@ -10,6 +10,10 @@ jobs:
     build-lint-test:
         runs-on: ubuntu-latest
         steps:
+          # Fetches the GitHub repository files
+          - name: Check out repository code 
+            uses: actions/checkout@v4
+          
           # Authenticates in GCP with the provided user credentials.
           # Provides secure, temporary credentials for GCP.
           # Supports authentication using Service Account Key JSONs (less secure, legacy method).
