@@ -37,7 +37,6 @@ void main() {
     // Tap 'Back'.
     await tester.tap(find.text('Back'));
     await tester.pumpAndSettle();
-    
 
     // Verify we're back on the homepage.
     expect(find.text('Play'), findsOneWidget);
