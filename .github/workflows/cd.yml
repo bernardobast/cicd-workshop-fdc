@@ -1,50 +1,58 @@
 name: CD
-run-name: '${{ github.actor }} is running the CD ⚙️'
-'on':
+run-name: ${{ github.actor }} is running the CD ⚙
+on:
+  # Runs this everytime a PR is merged against main
   push:
     branches:
       - main
+
 jobs:
   build-lint-test-deploy:
     runs-on: ubuntu-latest
     steps:
+      # Fetches the GitHub repository files
       - name: Check out repository code
         uses: actions/checkout@v4
+
+      # Authenticates in GCP with the provided user credentials.
+      # Provides secure, temporary credentials for GCP.
+      # Supports authentication using Service Account Key JSONs (less secure, legacy method).
       - name: Authenticate with GCP
         uses: google-github-actions/auth@v1
         with:
-          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      # Set the default GCP project for subsequent gcloud commands in your environment.
       - name: Configure GCP Project
-        run: 'gcloud config set project ${{ secrets.GCP_PROJECT_ID }}'
-      - name: This will be your CD ⚙️
-        run: echo "This will be your CD ⚙️"
+        run: gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
+
+      # CI steps
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: stable
-      - name: Get pub dependencies
-        run: flutter pub get
-      - name: Run web build
-        run: flutter build web
-      - name: Check format
-        run: dart format --output=none --set-exit-if-changed .
-      - name: Analyze
-        run: flutter analyze
-      - name: Test
-        run: flutter test
-      - name: "Build and Push Docker Image"
-        run: >
-          gcloud auth configure-docker --quiet
+          channel: "stable"
 
+      - run: flutter pub get
+      - run: flutter build web
+      - run: dart format --output=none --set-exit-if-changed .
+      - run: flutter analyze
+      - run: flutter test
+
+      # Configure Docker authentication for interacting with Artifact Registry, allowing you to push or pull Docker images securely.
+      # Build the docker image and push top artifact registry.
+      - name: Build and Push Docker Image 🐳
+        run: |
+          gcloud auth configure-docker --quiet
           gcloud auth configure-docker europe-west3-docker.pkg.dev --quiet
 
-          docker build -t europe-west3-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID
-          }}/${{ secrets.GCP_ARTIFACT_REGISTRY }}/corre_bem:v1 .
+          docker build -t europe-west3-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_ARTIFACT_REGISTRY }}/my_first_app:v1 .
+          docker push europe-west3-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_ARTIFACT_REGISTRY }}/my_first_app:v1
 
-          docker push europe-west3-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID
-          }}/${{ secrets.GCP_ARTIFACT_REGISTRY }}/corre_bem:v1
-      - name: Google Cloud Run
+      - name: Deploy to Cloud Run ☁
         run: |
           gcloud run deploy cicd-11 \
-            --image europe-west3-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_ARTIFACT_REGISTRY }}/corre_bem:v1 \
-            --region us-central \
+                    --image europe-west3-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_ARTIFACT_REGISTRY }}/my_first_app:v1 \
+                    --region us-central1 \
+
+      - name: This will be your CD ⚙
+        run: echo "This will be your CD ⚙"
