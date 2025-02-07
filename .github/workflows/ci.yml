@@ -20,6 +20,12 @@ jobs:
             with:
               channel: 'stable'
 
+          - name: Get pub dependencies
+            run: flutter pub get
+
+          - name: Run web build
+            run: flutter build web
+
           - name: Check format
             run: dart format --output=none --set-exit-if-changed .
 
