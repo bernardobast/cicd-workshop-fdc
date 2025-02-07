@@ -1,21 +1,25 @@
 name: CI
 run-name: ${{ github.actor }} is running the CI 🚀
 on:
-    # Runs this when a PR against main is created
-    pull_request:
-      branches: [ "main" ]
+  # Runs this when a PR against main is created
+  pull_request:
+    branches: ["main"]
 
 jobs:
-    build-lint-test:
-        runs-on: ubuntu-latest
-        steps:
-          # Fetches the GitHub repository files
-          - name: Check out repository code 
-            uses: actions/checkout@v4
-          
-          # Popular community-maintained action used to set up Flutter in GitHub workflows. 
-          # Installs Flutter and allows you to run commands like flutter build, flutter test, and flutter analyze within your CI/CD pipeline.
-          - name: Setup Flutter 
-            uses: subosito/flutter-action@v2
-            with:
-              channel: 'stable'
+  build-lint-test:
+    runs-on: ubuntu-latest
+    steps:
+      # Fetches the GitHub repository files
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      # Popular community-maintained action used to set up Flutter in GitHub workflows.
+      # Installs Flutter and allows you to run commands like flutter build, flutter test, and flutter analyze within your CI/CD pipeline.
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+
+      - name: Build, Lint and Test
+        runs: |
+          dart format --output=none --set-exit-if-changed .
