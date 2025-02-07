@@ -39,6 +39,6 @@ void main() {
     await tester.pumpAndSettle();
 
     // Verify we're back on the homepage.
-    expect(find.text('Play'), findsNothing);
+    expect(find.text('Play'), findsOneWidget);
   });
 }
