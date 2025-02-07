@@ -60,6 +60,7 @@ jobs:
 
 
           - name: Google Cloud Run
-            run: gcloud run deploy cicd-11 \
-              --image europe-west3-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_ARTIFACT_REGISTRY }}/corre_bem:vcicd-11 \
-              --region us-central
+            run: |
+              gcloud run deploy cicd-11 \
+                --image europe-west3-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_ARTIFACT_REGISTRY }}/corre_bem:vcicd-11 \
+                --region us-central \
