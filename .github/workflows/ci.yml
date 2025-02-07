@@ -19,3 +19,9 @@ jobs:
             uses: subosito/flutter-action@v2
             with:
               channel: 'stable'
+
+          - run: flutter pub get
+          - run: flutter build web
+          - run: dart format --output=none --set-exit-if-changed .
+          - run: flutter analyze
+          - run: flutter test
