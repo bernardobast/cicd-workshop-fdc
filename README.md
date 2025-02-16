@@ -2,6 +2,15 @@
 
 Welcome to the CICD Workshop here you will build your own CICD to deploy a Flutter App. The initial template for the flutter App was inspired from the following repo: https://github.com/flutter/games/tree/main/templates/card
 
+# Inital Setup:
+
+By the end of this workshop, you will have your own CICD running! The first step consists of creating your own repo. Please follow the following steps: 
+1. Create your own repository in GitHub. 
+2. Ensure that GitHub Actions is enabled on the `Actions` tab. 
+3. Copy this repo to your newly created repository. 
+4. Create a new branch and a pull request against main **on your new repo**. 
+5. Verify that the CI step is now running :)
+
 # Let's buid a Continuous Integration (CI):
 
 In this part of the workshop, we will be building a Continuous Integration (CI) system. The CI plays a crucial role in code development as it acts as the first line of defense in the pipeline. Here, we will build, lint, and test our code to ensure that our changes can be safely merged into the main branch.
@@ -23,8 +32,8 @@ Congratulations! You have successfully merged your first pull request (PR). Now,
 The first step in the Continuous Deployment (CD) process is authentication. You need to provide GitHub with credentials that will allow you to access your GCP project. Follow these steps:
 
 1. Go to Settings > Secrets and Variables > Actions > Repository Secrets and add a secret named `GCP_SA_KEY` with the provided credentials.
-2. Add a variable for `GCP_PROJECT_ID` using the provided GCP project ID.
-3. Add a variable for `GCP_ARTIFACT_REGISTRY` using the provided artifact registry.
+2. Add a secret named `GCP_PROJECT_ID` using the provided GCP project ID.
+3. Add a secret named `GCP_ARTIFACT_REGISTRY` using the provided artifact registry.
 
 Now that all the necessary information is correctly added to the secret environment variables, you can start implementing your CD pipeline. Follow these steps:
 
@@ -33,15 +42,19 @@ Now that all the necessary information is correctly added to the secret environm
 3. Create a step to build and push the Docker image. The Dockerfile is already provided in the root folder of the project—please read it carefully and ask any questions you may have. The tag to be used is provided below.
 4. Create a step to deploy to Google Cloud Run, as outlined below.
 
-For step 3 here is the docker tag you should use:
+For step 3, here is the docker tag you should use:
+- `FLUTTER_APP_NAME`: replace with your flutter-app-`cicd-id`.
+- `VERSION`: replace with the version of the app you are creating. Start with `v1.0.0`. 
 ```
-europe-west3-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_ARTIFACT_REGISTRY }}/{FLUTTER_APP_NAME}:v$VERSION
+europe-west3-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_ARTIFACT_REGISTRY }}/{FLUTTER_APP_NAME}:{VERSION}
 ```
-For step 4 this is how you should deploy your app to cloud run:
+For step 4, this is how you should deploy your app to cloud run:
+- `GOOGLE_CLOUD_RUN_SERVICE`: your `cicd-id`
+- `IMAGE_TAG`: The image tag you just created on step 3.
 ```
 gcloud run deploy {GOOGLE_CLOUD_RUN_SERVICE} \
  --image {IMAGE_TAG} \
- --region us-central
+ --region us-central1
 ```
 
 ## Do you have extra time? 🤔
