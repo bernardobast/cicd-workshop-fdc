@@ -6,10 +6,11 @@ Welcome to the CICD Workshop here you will build your own CICD to deploy a Flutt
 
 By the end of this workshop, you will have your own CICD running! The first step consists of creating your own repo. Please follow the following steps: 
 1. Create your own repository in GitHub. 
-2. Ensure that GitHub Actions is enabled on the `Actions` tab. 
-3. Copy this repo to your newly created repository. 
-4. Create a new branch and a pull request against main **on your new repo**. 
-5. Verify that the CI step is now running :)
+2. Ensure that GitHub Actions is enabled on the `Actions` tab.
+3. Create branch protection rules to avoid commit directly to main. 
+4. Copy this repo to your newly created repository. 
+5. Create a new branch and a pull request against main **on your new repo**. 
+6. Verify that the CI step is now running :)
 
 # Let's buid a Continuous Integration (CI):
 
