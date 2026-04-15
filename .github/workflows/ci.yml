@@ -31,7 +31,7 @@ jobs:
               - uses: google-github-actions/auth@v2
                 with:
                   workload_identity_provider: "projects/518851495309/locations/global/workloadIdentityPools/github-pool/providers/github-provider"
-                  service_account: "cicd-workshop-sa@${{ secrets.GCP_PROJECT_ID }}.iam.gserviceaccount.com"
+                  service_account: "cicd-workshop-sa@project-ef801521-090f-4fa8-9b5.iam.gserviceaccount.com"
 
               # Set the default GCP project for subsequent gcloud commands in your environment. 
               - name: Configure GCP Project
