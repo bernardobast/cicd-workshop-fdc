@@ -49,6 +49,6 @@ jobs:
                   echo "This will be your CD ⚙️"
                   docker build -t europe-west3-docker.pkg.dev/project-ef801521-090f-4fa8-9b5/cicd-workshop/cicd-test-1:1 .
                   docker push europe-west3-docker.pkg.dev/project-ef801521-090f-4fa8-9b5/cicd-workshop/cicd-test-1:1
-                  gcloud run deploy {GOOGLE_CLOUD_RUN_SERVICE} \
+                  gcloud run deploy cicd-work-shop-1 \
                   --image europe-west3-docker.pkg.dev/project-ef801521-090f-4fa8-9b5/cicd-workshop/cicd-test-1:1 \
                   --region us-central1
