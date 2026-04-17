@@ -18,13 +18,15 @@ Before we start, let's get your repository ready:
 1. Create your own repository in GitHub.
 2. Ensure that GitHub Actions is enabled on the `Actions` tab.
 3. Create a branch protection rule to prevent direct commits to `main`.
-4. Copy all the contents of this repo into your newly created repository. Make sure to include **all folders and files**, including hidden ones (those starting with `.`, such as `.github`). The easiest way is to copy everything and then push it to your repo:
+4. Copy all the contents of this repo into your newly created repository. Make sure to include **all folders and files**, including hidden ones (those starting with `.`, such as `.github`). Download or clone this repo locally, then copy everything into your own repo folder:
    ```bash
-   # Clone this repo, then push it to your own
-   git clone <this-repo-url> my-cicd-workshop
-   cd my-cicd-workshop
-   git remote set-url origin <your-repo-url>
-   git push -u origin main
+   # Copy all files (including hidden) from this repo into your own repo folder
+   cp -r cicd-workshop-fdc/. my-repo/
+   # Then stage, commit and push
+   cd my-repo
+   git add .
+   git commit -m "initial setup"
+   git push origin main
    ```
 5. Create a new branch, make a small change, and open a pull request against `main` **on your new repo**:
    ```bash
