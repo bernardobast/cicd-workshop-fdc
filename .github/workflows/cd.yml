@@ -6,6 +6,13 @@ on:
     branches:
       - main
 
+# id-token: write is required so that GitHub Actions can request an OIDC token,
+# which is then exchanged with GCP for a short-lived access token via WIF.
+# contents: read allows the workflow to check out the repository code.
+permissions:
+  id-token: write   # REQUIRED for WIF
+  contents: read
+
 jobs:
     build-lint-test-deploy:
         runs-on: ubuntu-latest
