@@ -1,55 +1,39 @@
 name: CI
 run-name: ${{ github.actor }} is running the CI 🚀
 on:
-    # Runs this when a PR against main is created
+    # Triggered on every pull request targeting the main branch.
+    # Ensures code is validated before it can be merged.
     pull_request:
       branches: [ "main" ]
 
-permissions:
-  id-token: write   # REQUIRED for WIF
-  contents: read
-
 jobs:
-    build-lint-test-deploy:
-            runs-on: ubuntu-latest
-            steps:
-              # Fetches the GitHub repository files
-              - name: Check out repository code 
-                uses: actions/checkout@v4
+    build-lint-test:
+        runs-on: ubuntu-latest
+        steps:
+          # Checks out the repository so the workflow has access to the source code.
+          - name: Check out repository code 
+            uses: actions/checkout@v4
+          
+          # Sets up Flutter in the runner environment using the latest stable channel.
+          - name: Setup Flutter 
+            uses: subosito/flutter-action@v2
+            with:
+              channel: 'stable'
+          
+          # Fetches and installs all dependencies declared in pubspec.yaml.
+          - name: Install dependencies
+            run: flutter pub get
+          
+          # Checks that all Dart files follow the official style guide.
+          # Fails the pipeline if any file is not correctly formatted.
+          - name: Verify formatting
+            run: dart format --output=none --set-exit-if-changed .
+          
+          # Runs the Dart/Flutter static analyzer to catch potential bugs and enforce best practices.
+          - name: Analyze project source
+            run: flutter analyze
 
-              # Popular community-maintained action used to set up Flutter in GitHub workflows. 
-              # Installs Flutter and allows you to run commands like flutter build, flutter test, and flutter analyze within your CI/CD pipeline.
-              - name: Setup Flutter 
-                uses: subosito/flutter-action@v2
-                with:
-                  channel: 'stable'
-
-              # Build app for web
-              - name: Build flutter app for web 🛜
-                run: flutter build web
-              
-              - uses: google-github-actions/auth@v2
-                with:
-                  workload_identity_provider: "projects/518851495309/locations/global/workloadIdentityPools/github-pool/providers/github-provider"
-                  service_account: "cicd-workshop-sa@project-ef801521-090f-4fa8-9b5.iam.gserviceaccount.com"
-
-              # Set the default GCP project for subsequent gcloud commands in your environment. 
-              - name: Configure GCP Project
-                run: gcloud config set project project-ef801521-090f-4fa8-9b
-
-              # Configure Docker authentication for interacting with Artifact Registry, allowing you to push or pull Docker images securely.
-              # Build the docker image and push top artifact registry.
-              - name: Build and Push Docker Image 🐳
-                run: |
-                  gcloud auth configure-docker --quiet
-                  gcloud auth configure-docker europe-west3-docker.pkg.dev --quiet
-              
-              - name: This will be your CD ⚙️
-                run: |
-                  echo "This will be your CD ⚙️"
-                  docker build -t europe-west3-docker.pkg.dev/project-ef801521-090f-4fa8-9b5/cicd-workshop/cicd-test-1:1 .
-                  docker push europe-west3-docker.pkg.dev/project-ef801521-090f-4fa8-9b5/cicd-workshop/cicd-test-1:1
-                  gcloud run deploy cicd-work-shop-1 \
-                  --image europe-west3-docker.pkg.dev/project-ef801521-090f-4fa8-9b5/cicd-workshop/cicd-test-1:1 \
-                  --region us-central1 \
-                  --allow-unauthenticated
+          # Compiles the Flutter app as a web application.
+          # Fails the pipeline if the build does not compile successfully.
+          - name: Build flutter app for web
+            run: flutter build web
