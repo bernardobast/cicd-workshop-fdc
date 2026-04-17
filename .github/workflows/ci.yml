@@ -1,7 +1,8 @@
 name: CI
 run-name: ${{ github.actor }} is running the CI 🚀
 on:
-    # Runs this when a PR against main is created
+    # Triggered on every pull request targeting the main branch.
+    # Ensures code is validated before it can be merged.
     pull_request:
       branches: [ "main" ]
 
@@ -9,31 +10,30 @@ jobs:
     build-lint-test:
         runs-on: ubuntu-latest
         steps:
-          # Fetches the GitHub repository files
+          # Checks out the repository so the workflow has access to the source code.
           - name: Check out repository code 
             uses: actions/checkout@v4
           
-          # Popular community-maintained action used to set up Flutter in GitHub workflows. 
-          # Installs Flutter and allows you to run commands like flutter build, flutter test, and flutter analyze within your CI/CD pipeline.
+          # Sets up Flutter in the runner environment using the latest stable channel.
           - name: Setup Flutter 
             uses: subosito/flutter-action@v2
             with:
               channel: 'stable'
           
-          # Fetch and install the dependencies listed in the project's pubspec.yaml file.
+          # Fetches and installs all dependencies declared in pubspec.yaml.
           - name: Install dependencies
             run: flutter pub get
           
-          # Detect unformatted files and fail the pipeline if formatting issues exist.
-          # --set-exit-if-changed stops execution if the any code is not well formatted
-          # --output=none prints files which needs to be formatted
+          # Checks that all Dart files follow the official style guide.
+          # Fails the pipeline if any file is not correctly formatted.
           - name: Verify formatting
             run: dart format --output=none --set-exit-if-changed .
           
-          # Checks your project for code issues, potential errors, and enforces best practices.
+          # Runs the Dart/Flutter static analyzer to catch potential bugs and enforce best practices.
           - name: Analyze project source
             run: flutter analyze
-          
-          # Checks your project for code issues, potential errors, and enforces best practices.
-          - name: Analyze project source
+
+          # Compiles the Flutter app as a web application.
+          # Fails the pipeline if the build does not compile successfully.
+          - name: Build flutter app for web
             run: flutter build web
