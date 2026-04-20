@@ -21,12 +21,7 @@ Before we start, let's get your repository ready:
 4. Copy all the contents of this repo into your newly created repository. Make sure to include **all folders and files**, including hidden ones (those starting with `.`, such as `.github`). Download or clone this repo locally, then copy everything into your own repo folder:
    ```bash
    # Copy all files (including hidden) from this repo into your own repo folder
-   cp -r cicd-workshop-fdc/. my-repo/
-   # Then stage, commit and push
-   cd my-repo
-   git add .
-   git commit -m "initial setup"
-   git push origin main
+   cp -r ./cicd-workshop-fdc/* my-repo/
    ```
 5. Create a new branch, make a small change, and open a pull request against `main` **on your new repo**:
    ```bash
@@ -34,7 +29,7 @@ Before we start, let's get your repository ready:
    # make any small change, e.g. edit this README
    git add .
    git commit -m "my first commit"
-   git push origin my-first-branch
+   git push --set-upstream origin my-first-branch
    ```
    Then open the pull request on GitHub.
 6. Verify that the CI step is now running.
